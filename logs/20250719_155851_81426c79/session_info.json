@@ -1,0 +1,12 @@
+{
+  "session_id": "20250719_155851_81426c79",
+  "start_time": "2025-07-19T15:58:51.410528",
+  "config_file": "/Volumes/Developer/Tools/flexllama/config.json",
+  "platform": "Darwin",
+  "python_version": "3.13.5 experimental free-threading build (main, Jul 19 2025, 14:05:00) [Clang 17.0.0 (clang-1700.3.9.908)]",
+  "log_files": {
+    "main_log": "main.log",
+    "error_log": "errors.log",
+    "runner_logs": "Runner logs (<runner_name>.log) are created when runners start successfully"
+  }
+}

@@ -1,111 +1,112 @@
 {
-    "auto_start_runners": true,
-    "api": {
-        "host": "0.0.0.0",
-        "port": 8080,
-        "health_endpoint": "/health"
+  "auto_start_runners": true,
+  "api": {
+    "host": "0.0.0.0",
+    "port": 8080,
+    "health_endpoint": "/health"
+  },
+  "retry_config": {
+    "max_retries": 3,
+    "base_delay_seconds": 2,
+    "max_delay_seconds": 30,
+    "retry_on_model_loading": true
+  },
+  "runner1": {
+    "type": "llama-server",
+    "path": "/path/to/llama-server",
+    "host": "127.0.0.1",
+    "port": 8085,
+    "extra_args": ["--verbose"]
+  },
+  "runner2": {
+    "type": "llama-server",
+    "path": "/path/to/llama-server",
+    "host": "127.0.0.1",
+    "port": 8086,
+    "extra_args": []
+  },
+  "models": [
+    {
+      "runner": "runner1",
+      "model": "/path/to/model1.gguf",
+      "model_alias": "model1",
+      "n_ctx": 4096,
+      "n_batch": 512,
+      "n_threads": 4,
+      "offload_kqv": true,
+      "flash_attn": true,
+      "use_mlock": true,
+      "main_gpu": 0,
+      "tensor_split": [1.0, 0.0],
+      "n_gpu_layers": 99,
+      "jinja": true
     },
-    "retry_config": {
-        "max_retries": 3,
-        "base_delay_seconds": 2,
-        "max_delay_seconds": 30,
-        "retry_on_model_loading": true
+    {
+      "runner": "runner2",
+      "model": "/path/to/model2.gguf",
+      "model_alias": "model2",
+      "n_ctx": 8192,
+      "n_batch": 256,
+      "n_threads": 8,
+      "chat_template": "mistral-instruct",
+      "offload_kqv": false,
+      "flash_attn": false,
+      "use_mlock": true,
+      "main_gpu": 0,
+      "tensor_split": [1.0, 0.0],
+      "n_gpu_layers": 50,
+      "jinja": true,
+      "split_mode": "row",
+      "cache-type-k": "q8_0",
+      "cache-type-v": "q8_0"
     },
-    "runner1": {
-        "type": "llama-server",
-        "path": "/path/to/llama-server",
-        "host": "127.0.0.1",
-        "port": 8085,
-        "extra_args": ["--verbose"]
+    {
+      "runner": "runner1",
+      "model": "/path/to/vision_model.gguf",
+      "mmproj": "/path/to/mmproj.gguf",
+      "model_alias": "vision_model",
+      "n_ctx": 32768,
+      "n_batch": 256,
+      "n_threads": 8,
+      "chat_template": "gemma",
+      "offload_kqv": true,
+      "flash_attn": true,
+      "use_mlock": true,
+      "tensor_split": [1.0, 0.0],
+      "n_gpu_layers": 99,
+      "rope-scaling": "linear",
+      "rope-scale": 2,
+      "yarn-orig-ctx": 32768
     },
-    "runner2": {
-        "type": "llama-server",
-        "path": "/path/to/llama-server",
-        "host": "127.0.0.1",
-        "port": 8086,
-        "extra_args": []
+    {
+      "runner": "runner2",
+      "model": "/path/to/reranker_model.gguf",
+      "model_alias": "reranker_model",
+      "n_ctx": 8192,
+      "n_batch": 512,
+      "n_threads": 8,
+      "offload_kqv": true,
+      "flash_attn": true,
+      "use_mlock": true,
+      "reranking": true,
+      "tensor_split": [1.0, 0.0],
+      "n_gpu_layers": 99
     },
-    "models": [
-        {
-            "runner": "runner1",
-            "model": "/path/to/model1.gguf",
-            "model_alias": "model1",
-            "n_ctx": 4096,
-            "n_batch": 512,
-            "n_threads": 4,
-            "offload_kqv": true,
-            "flash_attn": true,
-            "use_mlock": true,
-            "main_gpu": 0,
-            "tensor_split": [1.0, 0.0],
-            "n_gpu_layers": 99,
-            "jinja": true
-        },
-        {
-            "runner": "runner2",
-            "model": "/path/to/model2.gguf",
-            "model_alias": "model2",
-            "n_ctx": 8192,
-            "n_batch": 256,
-            "n_threads": 8,
-            "chat_template": "mistral-instruct",
-            "offload_kqv": false,
-            "flash_attn": false,
-            "use_mlock": true,
-            "main_gpu": 0,
-            "tensor_split": [1.0, 0.0],
-            "n_gpu_layers": 50,
-            "jinja": true,
-            "split_mode": "row",
-            "cache-type-k": "q8_0",
-            "cache-type-v": "q8_0"
-        },
-        {
-            "runner": "runner1",
-            "model": "/path/to/vision_model.gguf",
-            "mmproj": "/path/to/mmproj.gguf",
-            "model_alias": "vision_model",
-            "n_ctx": 32768,
-            "n_batch": 256,
-            "n_threads": 8,
-            "chat_template": "gemma",
-            "offload_kqv": true,
-            "flash_attn": true,
-            "use_mlock": true,
-            "tensor_split": [1.0, 0.0],
-            "n_gpu_layers": 99,
-            "rope-scaling": "linear",
-            "rope-scale": 2,
-            "yarn-orig-ctx": 32768
-        },
-        {
-            "runner": "runner2",
-            "model": "/path/to/reranker_model.gguf",
-            "model_alias": "reranker_model",
-            "n_ctx": 8192,
-            "n_batch": 512,
-            "n_threads": 8,
-            "offload_kqv": true,
-            "flash_attn": true,
-            "use_mlock": true,
-            "reranking": true,
-            "tensor_split": [1.0, 0.0],
-            "n_gpu_layers": 99
-        },
-        {
-            "runner": "runner1",
-            "model": "/path/to/embedding_model.gguf",
-            "model_alias": "embedding_model",
-            "n_ctx": 8192,
-            "n_batch": 512,
-            "n_threads": 8,
-            "offload_kqv": true,
-            "flash_attn": true,
-            "use_mlock": true,
-            "embedding": true,
-            "pooling": "cls",
-            "tensor_split": [1.0, 0.0],
-            "n_gpu_layers": 99
-        }
-    ]
+
+    {
+      "runner": "runner1",
+      "model": "/path/to/embedding_model.gguf",
+      "model_alias": "embedding_model",
+      "n_ctx": 8192,
+      "n_batch": 512,
+      "n_threads": 8,
+      "offload_kqv": true,
+      "flash_attn": true,
+      "use_mlock": true,
+      "embedding": true,
+      "pooling": "cls",
+      "tensor_split": [1.0, 0.0],
+      "n_gpu_layers": 99
+    }
+  ]
 }
